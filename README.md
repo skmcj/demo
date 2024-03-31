@@ -4,7 +4,12 @@
 
 - 目录
   - [昼夜变换按钮](#昼夜变换按钮)
+  - [翻页时钟](#翻页时钟)
 
 ### 昼夜变换按钮
 
 ![smswitch](https://static.ltgcm.top/md/20240326173842.gif)
+
+### 翻页时钟
+
+![flip-clock](https://static.ltgcm.top/md/20240331165326.gif)
