@@ -1,19 +1,16 @@
 import { createRoot } from 'react-dom/client';
-import { useState } from 'react';
+import { Outlet } from 'react-router';
+import { RouterProvider } from 'react-router';
+import router from './routes';
 
 // 应用入口
-function App() {
-  const [count, setCount] = useState(0);
-
+export default function App() {
   return (
     <>
-      <h1>Hello React</h1>
-      <img src="./static/images/cat.jpg" />
-      <p>count: {count}</p>
-      <button onClick={() => setCount(count + 1)}>count + 1</button>
+      <Outlet />
     </>
   );
 }
 
-const root = createRoot(document.body);
-root.render(<App />);
+const root = createRoot(document.getElementById('app') || document.body);
+root.render(<RouterProvider router={router} />);

@@ -1,5 +1,8 @@
-import { app, BrowserWindow } from 'electron';
-const path = require('path');
+import { app, BrowserWindow, net, protocol } from 'electron';
+import { existsSync } from 'fs';
+import path from 'path';
+import url from 'url';
+import { bindIpcMainHandler } from './utils/ipcMainUtil';
 
 // 插件自动生成的常量
 // 渲染器的入口点
@@ -41,7 +44,6 @@ const createLoading = () => {
 const createWindow = () => {
   // 创建渲染窗口
   const mainWindow = new BrowserWindow({
-    // icon: './assets/logo/logo.ico',
     height: 600,
     width: 800,
     show: false,
@@ -61,16 +63,105 @@ const createWindow = () => {
   });
 
   // 为窗口加载 index.html
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  // mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  if (process.env.ENV === 'development') mainWindow.loadURL('http://localhost:3000/');
+  else mainWindow.loadURL('app://renderer/');
 
   // 打开开发者工具
   // mainWindow.webContents.openDevTools();
 };
 
+// 注册自定义协议
+if (process.env.ENV !== 'development')
+  protocol.registerSchemesAsPrivileged([
+    {
+      scheme: 'app',
+      privileges: {
+        secure: true,
+        standard: true,
+        supportFetchAPI: true,
+        corsEnabled: true,
+        bypassCSP: true
+      }
+    },
+    {
+      scheme: 'local',
+      privileges: {
+        secure: true,
+        standard: true,
+        supportFetchAPI: true,
+        bypassCSP: true
+      }
+    }
+  ]);
+// 注册用于打开本地文件的协议
+else
+  protocol.registerSchemesAsPrivileged([
+    {
+      scheme: 'local',
+      privileges: {
+        secure: true,
+        standard: true,
+        supportFetchAPI: true,
+        bypassCSP: true
+      }
+    }
+  ]);
+
 // 当 Electron 初始化完成并准备创建渲染窗口(mainWindow)时调用
 // 某些 API 只能在此事件发生后使用
 // app.on('ready', createWindow);
 app.on('ready', async () => {
+  bindIpcMainHandler();
+  /**
+   * 自定义协议：app
+   */
+  if (process.env.ENV !== 'development')
+    protocol.handle('app', request => {
+      // const { host, pathname } = new URL(request.url);
+      // console.log('app:// =>', host, pathname);
+      // 自定义协议
+      // 首个 / 分割符前的字符串相当于域名，即跟路径
+      // 后续文件中类似 /
+      let fileUri = request.url.slice('app://'.length);
+      let filePath;
+      if (/\.[0-9a-zA-Z]{1,}$/.test(fileUri)) {
+        // 为文件路径
+        filePath = path.join(__dirname, '..', fileUri);
+        if (!existsSync(filePath)) {
+          // 文件不存在
+          fileUri = 'renderer/main_window/index.html';
+          filePath = path.join(__dirname, '..', fileUri);
+        }
+      } else {
+        // 非文件路径，可能为文件夹
+        fileUri = 'renderer/main_window/index.html';
+        filePath = path.join(__dirname, '..', fileUri);
+      }
+      return net.fetch(url.pathToFileURL(filePath).toString());
+    });
+  /** 自定义协议：local */
+  protocol.handle('local', request => {
+    // 自定义协议
+    // 首个 / 分割符前的字符串相当于域名，即跟路径
+    // 后续文件中类似 /
+    try {
+      // 例如 request.url => local://C&/images/bg.jpg
+      // fileUrl => C&/images/bg.jpg
+      const fileUrl = decodeURIComponent(request.url.replace('local://', ''));
+      // fixedPath => C:/images/bg.jpg
+      const fixedPath = fileUrl.replace(/^([A-Za-z])\&/, '$1:'); // C& → C:
+
+      // 可以加入更多的验证步骤，确保路径是合法的
+      // 甚至可以令协议支持相对路径
+      // ··· ···
+
+      return net.fetch(url.pathToFileURL(fixedPath).toString());
+    } catch (err) {
+      return new Response('Not Found', { status: 404 });
+    }
+  });
+
   // 先创建 Loading 窗口
   await createLoading();
   // 再创建 主窗口

@@ -2,6 +2,7 @@ import type { Configuration } from 'webpack';
 
 import { rules } from './webpack.rules';
 import { plugins } from './webpack.plugins';
+import path from 'path';
 
 export const mainConfig: Configuration = {
   /**
@@ -14,6 +15,10 @@ export const mainConfig: Configuration = {
   },
   plugins,
   resolve: {
+    // 配置主进程路径别名
+    alias: {
+      '@src': path.resolve(__dirname, './src')
+    },
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json']
   }
 };

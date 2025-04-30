@@ -1,7 +1,8 @@
 ## ele-react-demo
 
 <div align="center">
-    <img src="https://static.ltgcm.top/md/20241211173240.png" alt="ele" style="max-width: 420px;border-radius: 12px;" />
+    <img src="https://static.ltgcm.top/md/20250430232521.png" alt="ele" style="max-width: 420px;border-radius: 12px;" />
+    <img src="https://static.ltgcm.top/md/20250430232600.png" alt="ele" style="max-width: 420px;border-radius: 12px;" />
 </div>
 
 ### 环境
@@ -10,7 +11,20 @@
 
 ### 简介
 
-模板以`electron-forge`与`webpack`构建，集成了`react`、`typescript`、`scss`能力，同时还具有启动前`loading`及静态资源配置的功能
+模板以`electron-forge`与`webpack`构建
+
+集成了
+
+- [x] `react`
+- [x] `typescript`
+- [x] `scss`
+- [x] 启动前`loading`动画
+- [x] 静态资源配置的功能
+- [x] 访问本地磁盘资源
+- [x] `react-router`单页面应用，以`history`模式多窗口加载不同路由
+- [x] `CSP`限制解除
+
+打开即用
 
 ### 使用方式
 

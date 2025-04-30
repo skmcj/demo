@@ -34,7 +34,16 @@ const config: ForgeConfig = {
             }
           }
         ]
-      }
+      },
+      // 开发时单页面路由配置
+      devServer: {
+        historyApiFallback: {
+          rewrites: [{ from: /^\/.*$/, to: '/main_window/index.html' }]
+        }
+      },
+      // CSP 配置
+      devContentSecurityPolicy:
+        "default-src 'self';img-src 'self' https:;style-src 'self' 'unsafe-inline';script-src 'self' 'unsafe-inline' 'unsafe-eval';"
     }),
     // Fuses 用于启动/禁用各种 Electron 功能(打包或代码签名应用前)
     new FusesPlugin({
