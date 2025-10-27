@@ -7,6 +7,7 @@
   - [翻页时钟](#翻页时钟)
   - [snippet](#代码片段)
   - [ele-react-demo](#electron+react+ts模板)
+  - [CSS时钟](#几乎纯CSS实现的可动时钟)
 
 ### 昼夜变换按钮
 
@@ -25,3 +26,7 @@
 ### electron+react+ts模板
 
 ![ele-react-demo](assets/3B70BF3A0102492DAD3FB83206CAF375.png)
+
+### 几乎纯CSS实现的可动时钟
+
+![clock](https://static.ltgcm.top/md/20251027225708.gif)

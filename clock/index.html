@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS时钟</title>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+    <link rel="stylesheet" href="./main.css">
+</head>
+
+<body>
+    <div class="clock" id="clock">
+        <!-- 时间 -->
+        <div class="clock-inner">
+            <div class="time">1</div>
+            <div class="time">2</div>
+            <div class="time">3</div>
+            <div class="time">4</div>
+            <div class="time">5</div>
+            <div class="time">6</div>
+            <div class="time">7</div>
+            <div class="time">8</div>
+            <div class="time">9</div>
+            <div class="time">10</div>
+            <div class="time">11</div>
+            <div class="time">12</div>
+        </div>
+        <!-- 时针 -->
+        <div class="needle">
+            <div class="hour"></div>
+            <div class="minute"></div>
+            <div class="second"></div>
+            <!-- 中间圆点 -->
+            <div class="dot"></div>
+        </div>
+    </div>
+</body>
+<script>
+    const clock = document.getElementById('clock');
+    if (clock) {
+        const now = new Date();
+        // 当前秒针延迟秒数
+        const second = -1 * (now.getSeconds() - 15);
+        // 当前分针延迟秒数
+        const minute = -60 * (now.getMinutes() - 15) + second;
+        // 当前时针延迟秒数
+        const hour = -3600 * (now.getHours() % 12 - 3) + minute;
+        // 由于针的初始位置是水平的(指向 3)，故需减去对应延时
+        clock.style.setProperty('--h', `${hour}s`);
+        clock.style.setProperty('--m', `${minute}s`);
+        clock.style.setProperty('--s', `${second}s`);
+    }
+</script>
+
+</html>

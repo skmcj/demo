@@ -1,0 +1,160 @@
+.clock {
+  /* 时钟尺寸 */
+  --size: 300px;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background-color: #1e2732;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.clock-inner {
+  /* 时间单元尺寸 */
+  --time-size: 24px;
+  /* 半径 */
+  --r: calc((var(--size) - var(--time-size)) / 2);
+  position: relative;
+  width: var(--time-size);
+  height: var(--time-size);
+}
+
+.time {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  width: var(--time-size);
+  height: var(--time-size);
+  text-align: center;
+  line-height: var(--time-size);
+  position: absolute;
+  /* 时间位置 => 根据角度计算 */
+  top: calc(var(--r) * sin(var(--angle)));
+  left: calc(var(--r) * cos(var(--angle)));
+}
+
+.clock-inner .time:nth-child(1) {
+  --angle: 300deg;
+}
+
+.clock-inner .time:nth-child(2) {
+  --angle: 330deg;
+}
+
+.clock-inner .time:nth-child(3) {
+  /* 由于 0 deg 指向的是 3，即水平 */
+  --angle: 0deg;
+}
+
+.clock-inner .time:nth-child(4) {
+  /* 角度依次递增，每次增 30 度(360/12) */
+  --angle: 30deg;
+}
+
+.clock-inner .time:nth-child(5) {
+  --angle: 60deg;
+}
+
+.clock-inner .time:nth-child(6) {
+  --angle: 90deg;
+}
+
+.clock-inner .time:nth-child(7) {
+  --angle: 120deg;
+}
+
+.clock-inner .time:nth-child(8) {
+  --angle: 150deg;
+}
+
+.clock-inner .time:nth-child(9) {
+  --angle: 180deg;
+}
+
+.clock-inner .time:nth-child(10) {
+  --angle: 210deg;
+}
+
+.clock-inner .time:nth-child(11) {
+  --angle: 240deg;
+}
+
+.clock-inner .time:nth-child(12) {
+  --angle: 270deg;
+}
+
+/* 时针父元素 */
+.needle {
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 50%;
+  left: 50%;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  background-color: #fff;
+}
+
+.hour,
+.minute,
+.second {
+  position: absolute;
+  left: -5px;
+}
+
+.hour {
+  width: calc(var(--size) * 0.3);
+  height: 8px;
+  border-radius: 4px;
+  top: -4px;
+  background-color: #38b48b;
+  /* 改变旋转圆心 */
+  transform-origin: 5px 4px;
+  /* 转一圈 43200 秒 */
+  animation: rotate 43200s linear infinite;
+  /* 对应延时，默认为 0 */
+  animation-delay: var(--h, 0s);
+}
+
+.minute {
+  width: calc(var(--size) * 0.4);
+  height: 6px;
+  border-radius: 3px;
+  top: -3px;
+  background-color: #0095d9;
+  transform-origin: 5px 3px;
+  /* 转一圈 3600 秒 */
+  animation: rotate 3600s linear infinite;
+  animation-delay: var(--m, 0s);
+}
+
+.second {
+  width: calc(var(--size) * 0.45);
+  height: 4px;
+  border-radius: 2px;
+  top: -2px;
+  background-color: #e94829;
+  transform-origin: 5px 2px;
+  /* 转一圈 60 s */
+  /* 动画分 60 步，即 60 个刻度 */
+  animation: rotate 60s steps(60, end) infinite;
+  animation-delay: var(--s, 0s);
+}
+
+/* 动画帧 */
+@keyframes rotate {
+
+  /* 转一圈 */
+  to {
+    transform: rotate(360deg);
+  }
+}
